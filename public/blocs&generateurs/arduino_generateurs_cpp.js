@@ -8399,8 +8399,9 @@ Blockly.Arduino['blynk_run'] = function(block) {
 
 // Generator for Blynk.virtualWrite
 Blockly.Arduino['blynk_virtual_write'] = function(block) {
-  var pin = Blockly.Arduino.valueToCode(block, 'PIN', Blockly.Arduino.ORDER_ATOMIC) || ''; // Empty string if no input
-  var data = Blockly.Arduino.valueToCode(block, 'DATA', Blockly.Arduino.ORDER_ATOMIC) || ''; // Empty string if no input
+ // var pin = Blockly.Arduino.valueToCode(block, 'PIN', Blockly.Arduino.ORDER_ATOMIC) || ''; // Empty string if no input
+ var pin = block.getFieldValue('VIRTUAL_PIN'); 
+ var data = Blockly.Arduino.valueToCode(block, 'DATA', Blockly.Arduino.ORDER_ATOMIC) || ''; // Empty string if no input
   
   var code = 'Blynk.virtualWrite(' + pin + ', ' + data + ');\n';
   

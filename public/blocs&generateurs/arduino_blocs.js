@@ -2288,6 +2288,7 @@ Blockly.Blocks["ultrasonic_ranger_sensor"] = {
   }
 };
 
+
 Blockly.Blocks["dht_sensor"] = {
   init: function() {
      this.setColour("#6D7497");
@@ -11297,14 +11298,21 @@ Blockly.Blocks['blynk_run'] = {
   }
 };
 
-// Define the Blynk.virtualWrite block
+
+
 Blockly.Blocks['blynk_virtual_write'] = {
   init: function() {
-    this.appendValueInput("PIN")
-        .setCheck("Number")
-        .appendField("Blynk.virtualWrite Pin");
     this.appendValueInput("DATA")
-        .appendField("Data");
+        .appendField("Blynk.virtualWrite to")
+        .appendField(new Blockly.FieldDropdown([
+          ["V0", "V0"],
+          ["V1", "V1"],
+          ["V2", "V2"],
+          ["V3", "V3"],
+          ["V4", "V4"],
+          ["V5", "V5"]
+        ]), "VIRTUAL_PIN")
+        .appendField("Data"); // Adding the "Data" label
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -11314,31 +11322,6 @@ Blockly.Blocks['blynk_virtual_write'] = {
   }
 };
 
-
-
-// Blockly block for param.asStr()
-Blockly.Blocks['blynk_param_as_str'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("param.asStr()");
-    this.setOutput(true, "String");
-    this.setColour(230);
-    this.setTooltip("Convert parameter to String");
-    this.setHelpUrl("");
-  }
-};
-  
-// Blockly block for param.asInt()
-Blockly.Blocks['blynk_param_as_int'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("param.asInt()");
-    this.setOutput(true, "Number");
-    this.setColour(230);
-    this.setTooltip("Convert parameter to Integer");
-    this.setHelpUrl("");
-  }
-};
 
 Blockly.Blocks['blynk_virtual_pin_function'] = {
   init: function() {
@@ -11361,6 +11344,31 @@ Blockly.Blocks['blynk_virtual_pin_function'] = {
     this.setNextStatement(true, null);
     this.setColour(230);
     this.setTooltip("Handle Blynk virtual pin function");
+    this.setHelpUrl("");
+  }
+};
+
+
+// Blockly block for param.asStr()
+Blockly.Blocks['blynk_param_as_str'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("param.asStr()");
+    this.setOutput(true, "String");
+    this.setColour(230);
+    this.setTooltip("Convert parameter to String");
+    this.setHelpUrl("");
+  }
+};
+  
+// Blockly block for param.asInt()
+Blockly.Blocks['blynk_param_as_int'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("param.asInt()");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Convert parameter to Integer");
     this.setHelpUrl("");
   }
 };
