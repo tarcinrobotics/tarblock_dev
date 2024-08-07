@@ -638,6 +638,23 @@ Blockly.Arduino["digital_read"]=function(block){
     var code="digitalRead(" + dropdown_pin + ")";
     return [code, Blockly.Arduino.ORDER_ATOMIC]
 };
+
+Blockly.Arduino['inout_digital_read'] = function(block) {
+  var pin = block.getFieldValue('digital_pin');
+  var code = 'digitalRead(' + pin + ')';
+  return [code, Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino['digital_write'] = function(block) {
+  var pin = block.getFieldValue('PIN');
+  var value = block.getFieldValue('VALUE') === 'HIGH' ? '1' : '0'; // Convert HIGH to 1 and LOW to 0
+  var code = 'digitalWrite(' + pin + ', ' + value + ');\n';
+  return code;
+};
+
+
+
+
 Blockly.Arduino["digital_readbi"]=function(block){
     var pull_up=block.getFieldValue('pullup') == 'TRUE';
     var dropdown_pin=Blockly.Arduino.valueToCode(block, "PIN", Blockly.Arduino.ORDER_ATOMIC);
@@ -6515,19 +6532,21 @@ Blockly.Arduino['variables_get']=function(block){
     var code = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
     return [code, Blockly.Arduino.ORDER_ATOMIC];
 };
-Blockly.Arduino['variables_set']=function(block){
-    var argument0 = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT);
-    var varName = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
-    var code = varName + ' = ' + argument0 + ';\n';
-    return code;
+Blockly.Arduino['variables_set'] = function(block) {
+  var argument0 = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT) || '0';
+  var varName = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
+  var code = varName + ' = ' + argument0 + ';\n';
+  return code;
 };
-Blockly.Arduino['variables_set_init']=function(block){
-  var argument0 = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT);
+
+Blockly.Arduino['variables_set_init'] = function(block) {
+  var argument0 = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT) || '0';
   var varName = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   var typeBlock = Blockly.Arduino.getArduinoType_(Blockly.Types[block.getFieldValue('VARIABLE_SETTYPE_TYPE')]);
-  Blockly.Arduino.variables_[varName] = typeBlock + ' ' + varName + ' = ' + argument0 + ';';
-  return "";
+  var code = typeBlock + ' ' + varName + ' = ' + ';\n';
+  return code;
 };
+
 Blockly.Arduino["base_define_const"]=function(block){
     var value_text1 = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
     var value_text2 = Blockly.Arduino.valueToCode(block, "TEXT2", Blockly.Arduino.ORDER_ATOMIC);
@@ -8362,15 +8381,19 @@ var color = this.getFieldValue('color');
     return [code, Blockly.Arduino.ORDER_ATOMIC]
 };
 
-// Generator for Blynk.begin
+
+
 Blockly.Arduino['blynk_begin'] = function(block) {
-  var auth_token = block.getFieldValue('AUTH_TOKEN');
+  var Tokens = block.getFieldValue('Tokens');
   var ssid = block.getFieldValue('SSID');
   var pass = block.getFieldValue('PASS');
 
+  // Split Tokens by '#' and format each with a newline
+  var tokensArray = Tokens.split('#').filter(token => token.trim() !== '').map(token => `#${token}`).join('\n');
+
   // Global definitions
   var includes = `
-#define BLYNK_AUTH_TOKEN "${auth_token}"
+${tokensArray}
 
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
@@ -8388,6 +8411,35 @@ char pass[] = "${pass}";
   var code = '';
   return code;
 };
+
+/*/ Generator for Blynk.begin
+Blockly.Arduino['blynk_begin'] = function(block) {
+  var Tokens = block.getFieldValue('Tokens');
+  var ssid = block.getFieldValue('SSID');
+  var pass = block.getFieldValue('PASS');
+
+  // Global definitions
+  var includes = `
+${Tokens}
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "${ssid}";
+char pass[] = "${pass}";
+  `;
+  Blockly.Arduino.addInclude('blynk_includes', includes);
+
+  // Initialization code to go inside setup()
+  var setupCode = `Blynk.begin(auth, ssid, pass);`;
+  Blockly.Arduino.addSetup('blynk_begin', setupCode, true);
+  
+  var code = '';
+  return code;
+};
+*/
+
 
 
 Blockly.Arduino['blynk_run'] = function(block) {

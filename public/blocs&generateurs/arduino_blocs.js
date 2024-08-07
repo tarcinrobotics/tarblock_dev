@@ -497,18 +497,67 @@ Blockly.Blocks["inout_digital_write"]={init:function(){
         //this.setTooltip(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_TOOLTIP)
     }
 };
-Blockly.Blocks["inout_digital_read"]={init:function(){
-        this.setColour("#00929f");
-        //this.setHelpUrl(Blockly.Msg.HELPURL_029);
-        this.appendValueInput("PIN", "Number").setAlign(Blockly.ALIGN_RIGHT).appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_READ_INPUT);
-        this.setOutput(true, "Boolean");
-       // this.setTooltip(Blockly.Msg.ARDUINO_INOUT_DIGITAL_READ_TOOLTIP)
-    }
+
+Blockly.Blocks['digital_write'] = {
+  init: function() {
+    this.setColour("#A5675B");
+    this.setHelpUrl(Blockly.Msg.HELPURL_030); // Update with appropriate help URL
+    this.appendDummyInput()
+      .appendField("Digital Output - PIN") // Label for the dropdown
+      .appendField(new Blockly.FieldDropdown([
+        ["D0", "D0"],
+        ["D1", "D1"],
+        ["D2", "D2"],
+        ["D3", "D3"],
+        ["D4", "D4"],
+        ["D5", "D5"],
+        ["D6", "D6"],
+        ["D7", "D7"],
+        ["D8", "D8"],
+        ["D9", "D9"],
+        ["D10", "D10"]
+      ]), "PIN");
+    this.appendDummyInput()
+      .appendField("Value")
+      .appendField(new Blockly.FieldDropdown([
+        ["HIGH", "HIGH"],
+        ["LOW", "LOW"]
+      ]), "VALUE");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip("Set the specified GPIO pin to HIGH or LOW.");
+  }
 };
+
+
+
+Blockly.Blocks["inout_digital_read"] = {
+  init: function() {
+    this.setColour("#A5675B");
+    this.setHelpUrl(Blockly.Msg.HELPURL_031);
+    this.appendDummyInput()
+      .appendField("Read Digital - Pin")
+      .appendField(new Blockly.FieldDropdown([
+        ["D0", "D0"],
+        ["D1", "D1"],
+        ["D2", "D2"], ["D3", "D3"],
+        ["D4", "D4"], ["D5", "D5"],
+        ["D6", "D6"], ["D7", "D7"],
+        ["D8", "D8"], ["D9", "D9"],
+        ["D10", "D10"],
+        // Add more digital pins as needed
+      ]), "digital_pin");
+    this.setOutput(true, "Boolean");
+    // this.setTooltip("Read the digital value from the specified pin");
+  }
+}
 Blockly.Blocks["digital_read"]={init:function(){
         this.setColour("#A5675B");
         this.setHelpUrl(Blockly.Msg.HELPURL_029);
-        this.appendValueInput("PIN", "Number").appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_READ_INPUT);
+        this.appendValueInput("PIN", "Number")
+        .appendField("Digital Input - GPIO");
+        
         //this.appendDummyInput().setAlign(Blockly.ALIGN_RIGHT).appendField(new Blockly.FieldCheckbox("FALSE"), "pullup").appendField(Blockly.Msg.in_pullup);   сопротивление резистор микроконтроллера
         this.setInputsInline(true);
         this.setOutput(true, "Boolean");
@@ -579,20 +628,25 @@ Blockly.Blocks["inout_analog_write3"]={init:function(){
 };
 
 
-Blockly.Blocks["inout_analog_read"]={init:function(){
-    var card=window.localStorage.card;
+Blockly.Blocks["inout_analog_read"] = {
+  init: function() {
+    var card = window.localStorage.card;
     var prog = window.localStorage.prog;
-        this.setColour("#A5675B");
-        this.setHelpUrl(Blockly.Msg.HELPURL_031);
+    this.setColour("#A5675B");
+    this.setHelpUrl(Blockly.Msg.HELPURL_031);
     if (prog != "python") {
-      this.appendDummyInput().appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_INPUT).appendField(new Blockly.FieldDropdown(profile[card].dropdownAnalog), "broche");
-        } else {
-      this.appendDummyInput().appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_INPUT+" A0");
+      this.appendDummyInput()
+        .appendField("Analog Input - Pin") // Add this label
+        .appendField(new Blockly.FieldDropdown(profile[card].dropdownAnalog), "broche");
+    } else {
+      this.appendDummyInput()
+        .appendField("Analog Input - GPIO A0"); // Update label for Python or other cases
     }
     this.setOutput(true, "Number");
-        //this.setTooltip(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_TOOLTIP)
-    }
+    // this.setTooltip(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_TOOLTIP);
+  }
 };
+
 Blockly.Blocks["inout_analog_read_esp"]={init:function(){
    // var card=window.localStorage.card;
    // var prog = window.localStorage.prog;
@@ -2272,21 +2326,33 @@ Blockly.Blocks["inout_analog_readR"]={init:function(){
 
 Blockly.Blocks["ultrasonic_ranger_sensor"] = {
   init: function() {
-     this.setColour("#6D7497");
+    this.setColour("#6D7497");
+    this.setHelpUrl(Blockly.Msg.HELPURL_059); // Update with appropriate help URL
+    
+    // Add a label for the block
     this.appendDummyInput()
-      .appendField(Blockly.Msg.ultrasonic_ranger)
-        .appendField(Blockly.Msg.TRIG);
-  this.appendValueInput("PIN_TRIG", 'Number')
-        .setCheck('Number');
-  this.appendDummyInput()
-        .appendField(Blockly.Msg.Echo);
-  this.appendValueInput("PIN_ECHO", 'Number')
-        .setCheck('Number');
+      .appendField("Rangefinder HC SR04")
+      .appendField("Trig - GPIO");
+    
+    // Numerical input for Trig pin
+    this.appendValueInput("PIN_TRIG", 'Number')
+      .setCheck('Number')
+      .setAlign(Blockly.ALIGN_RIGHT);
+    
+    // Label and numerical input for Echo pin
+    this.appendDummyInput()
+      .appendField("Echo - GPIO");
+    
+    this.appendValueInput("PIN_ECHO", 'Number')
+      .setCheck('Number')
+      .setAlign(Blockly.ALIGN_RIGHT);
+    
     this.setOutput(true, 'Number');
-    //this.setTooltip('');
-  this.setHelpUrl(Blockly.Msg.HELPURL_059);
+    this.setTooltip("Use the HC-SR04 ultrasonic sensor with the specified Trig and Echo pins.");
+    this.setInputsInline(true);
   }
 };
+
 
 
 Blockly.Blocks["dht_sensor"] = {
@@ -11268,8 +11334,9 @@ Blockly.Blocks['blynk_begin'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Blynk.begin")
-        .appendField("Auth Token")
-        .appendField(new Blockly.FieldTextInput("AUTH_TOKEN"), "AUTH_TOKEN")
+        .appendField("Tokens")
+        .appendField(new Blockly.FieldTextInput("Tokens"), "Tokens")
+        
         .appendField("SSID")
         .appendField(new Blockly.FieldTextInput("SSID"), "SSID")
         .appendField("Password")
