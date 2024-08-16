@@ -6540,12 +6540,21 @@ Blockly.Arduino['variables_set'] = function(block) {
 };
 
 Blockly.Arduino['variables_set_init'] = function(block) {
-  var value = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT) || '0';
+  var value = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT);
   var varName = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   var typeBlock = Blockly.Arduino.getArduinoType_(Blockly.Types[block.getFieldValue('VARIABLE_SETTYPE_TYPE')]);
-  var code = typeBlock + ' ' + varName + ' = ' + value + ';\n';
+
+  // If no value is provided, do not include a default value
+  var code;
+  if (value === '') {
+    code = typeBlock + ' ' + varName + ';\n';  // Declare variable without initialization
+  } else {
+    code = typeBlock + ' ' + varName + ' = ' + value + ';\n';  // Declare and initialize variable
+  }
+
   return code;
 };
+
 
 
 Blockly.Arduino["base_define_const"]=function(block){
