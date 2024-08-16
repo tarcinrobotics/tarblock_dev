@@ -6540,12 +6540,13 @@ Blockly.Arduino['variables_set'] = function(block) {
 };
 
 Blockly.Arduino['variables_set_init'] = function(block) {
-  var argument0 = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT) || '0';
+  var value = Blockly.Arduino.valueToCode(block, 'VALUE', Blockly.Arduino.ORDER_ASSIGNMENT) || '0';
   var varName = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   var typeBlock = Blockly.Arduino.getArduinoType_(Blockly.Types[block.getFieldValue('VARIABLE_SETTYPE_TYPE')]);
-  var code = typeBlock + ' ' + varName + ' = ' + ';\n';
+  var code = typeBlock + ' ' + varName + ' = ' + value + ';\n';
   return code;
 };
+
 
 Blockly.Arduino["base_define_const"]=function(block){
     var value_text1 = Blockly.Arduino.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
